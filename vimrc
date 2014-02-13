@@ -327,7 +327,7 @@
     NeoBundleLazy 'othree/html5.vim', {'autoload':{'filetypes':['html']}}
     NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['styl']}}
     NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}}
-    NeoBundleLazy 'juvenn/vim-mustache-handlebars.vim', {'autoload':{'filetypes':['mustache', 'handlebars']}}
+    NeoBundleLazy 'mustache/vim-mustache-handlebars', {'autoload':{'filetypes':['mustache', 'handlebars']}}
     NeoBundleLazy 'gregsexton/MatchTag', {'autoload':{'filetypes':['html','xml']}}
     NeoBundleLazy 'mattn/emmet-vim', {'autoload':{'filetypes':['html','xml','xsl','xslt','xsd','css','sass','scss','less','mustache']}} "{{{
       function! s:zen_html_tab()
@@ -835,6 +835,7 @@
     let g:solarized_termtrans=1
   "}}}
   NeoBundle 'nanotech/jellybeans.vim'
+
   NeoBundle 'tomasr/molokai'
   NeoBundle 'chriskempson/vim-tomorrow-theme'
   NeoBundle 'chriskempson/base16-vim'

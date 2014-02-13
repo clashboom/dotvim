@@ -325,9 +325,14 @@ this can be overridden with `g:dotvim_settings.autocomplete_method`
 * Check out sneak, try it.
 * Try out easygrep
 * For instant markdown - [sudo] gem install pygments.rb [sudo] gem install redcarpet -v 2.3.0 [sudo] npm -g install instant-markdown-d If you're on Linux, the xdg-utils package needs to be installed 
+* Install xolox plugins - easytags and session 
+* Check for plugins in next section
+* Get rid of plugins like the vimwiki, but first try it out, maybe it catches, also change the bloody font to something 
+* http://www.slant.co/topics/67/~what-are-the-best-programming-fonts add way to install Source Code Pro at least
 
 
 ### and some more plugins
+
 * [signature](https://github.com/kshenoy/vim-signature) shows marks beside line numbers
 * [bufferline](https://github.com/bling/vim-bufferline) simple plugin which prints all your open buffers in the command bar
 * [delimitmate](https://github.com/Raimondi/delimitMate) automagically adds closing quotes and braces
