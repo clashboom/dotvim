@@ -327,7 +327,7 @@
     NeoBundleLazy 'othree/html5.vim', {'autoload':{'filetypes':['html']}}
     NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['styl']}}
     NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}}
-    NeoBundleLazy 'juvenn/mustache.vim', {'autoload':{'filetypes':['mustache']}}
+    NeoBundleLazy 'juvenn/vim-mustache-handlebars.vim', {'autoload':{'filetypes':['mustache', 'handlebars']}}
     NeoBundleLazy 'gregsexton/MatchTag', {'autoload':{'filetypes':['html','xml']}}
     NeoBundleLazy 'mattn/emmet-vim', {'autoload':{'filetypes':['html','xml','xsl','xslt','xsd','css','sass','scss','less','mustache']}} "{{{
       function! s:zen_html_tab()
@@ -627,7 +627,7 @@
     endif
     NeoBundle 'kana/vim-vspec'
     NeoBundleLazy 'tpope/vim-scriptease', {'autoload':{'filetypes':['vim']}}
-    NeoBundleLazy 'tpope/vim-markdown', {'autoload':{'filetypes':['markdown']}}
+    NeoBundleLazy 'plasticboy/vim-markdown', {'autoload':{'filetypes':['markdown']}}
     if executable('redcarpet') && executable('instant-markdown-d')
       NeoBundleLazy 'suan/vim-instant-markdown', {'autoload':{'filetypes':['markdown']}}
     endif
