@@ -1,10 +1,10 @@
 " vim: fdm=marker ts=2 sts=2 sw=2 fdl=0
-
 " detect OS {{{
   let s:is_windows = has('win32') || has('win64')
   let s:is_cygwin = has('win32unix')
   let s:is_macvim = has('gui_macvim')
 "}}}
+
 
 " dotvim settings {{{
   if !exists('g:dotvim_settings') || !exists('g:dotvim_settings.version')
@@ -160,6 +160,7 @@
   " whitespace
   set backspace=indent,eol,start                      "allow backspacing everything in insert mode
   set autoindent                                      "automatically indent to match adjacent lines
+  set virtualedit=all                                 "allow the cursor to go to invalid places
   set expandtab                                       "spaces instead of tabs
   set smarttab                                        "use shiftwidth to enter tabs
   let &tabstop=s:settings.default_indent              "number of spaces per tab for display
@@ -171,13 +172,17 @@
   set linebreak
   let &showbreak='↪ '
 
-  set scrolloff=1                                     "always show content after scroll
+  set scrolloff=8                                     "always show content after scroll
   set scrolljump=5                                    "minimum number of lines to scroll
   set display+=lastline
   set wildmenu                                        "show list for autocomplete
   set wildmode=list:full
   set wildignorecase
   set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.idea/*,*/.DS_Store
+  set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+  set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+  set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.pyd,*.class,*.lock
+  set wildignore+=*.png,*.gif,*.jpg,*.ico
 
   set splitbelow
   set splitright
@@ -192,6 +197,7 @@
   set incsearch                                       "incremental searching
   set ignorecase                                      "ignore case for searching
   set smartcase                                       "do case-sensitive if there's a capital letter
+  set wrapscan                                        "set the search scan to wrap lines
   if executable('ack')
     set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
     set grepformat=%f:%l:%c:%m
@@ -230,6 +236,7 @@
   set showmatch                                       "automatically highlight matching braces/brackets/etc.
   set matchtime=2                                     "tens of a second to show matching parentheses
   set number
+  set ch=2                                            "make command line 2 lines high
   set lazyredraw
   set laststatus=2
   set noshowmode
@@ -300,6 +307,11 @@
       let g:airline#extensions#tabline#left_sep=' '
       let g:airline#extensions#tabline#left_alt_sep='¦'
     "}}}
+    NeoBundle 'jmcantrell/vim-virtualenv' "{{{
+      let g:virtualenv_directory = "~/envs"
+      let g:virtualenv_auto_activate = 1
+      let g:virtualenv_stl_format = '[%n]'
+    "}}}
     NeoBundle 'tpope/vim-surround'
     NeoBundle 'tpope/vim-repeat'
     NeoBundle 'tpope/vim-dispatch'
@@ -320,6 +332,7 @@
     \ }
   endif "}}}
   if count(s:settings.plugin_groups, 'web') "{{{
+    NeoBundle 'chrisbra/Colorizer'
     NeoBundleLazy 'groenewege/vim-less', {'autoload':{'filetypes':['less']}}
     NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}}
     NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':{'filetypes':['css','scss','sass']}}
@@ -366,6 +379,7 @@
     NeoBundle 'tpope/vim-bundler'
   endif "}}}
   if count(s:settings.plugin_groups, 'python') "{{{
+    NeoBundleLazy 'fs111/pydoc.vim', {'autoload':{'filetypes':['python']}}
     NeoBundleLazy 'klen/python-mode', {'autoload':{'filetypes':['python']}} "{{{
       let g:pymode_rope=0
     "}}}
@@ -526,8 +540,11 @@
       nnoremap <F3> :NERDTreeFind<CR>
     "}}}
     NeoBundleLazy 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} "{{{
-      nnoremap <silent> <F9> :TagbarToggle<CR>
+      nnoremap <silent> <F4> :TagbarToggle<CR>
+      let g:tagbar_autofocus = 1
     "}}}
+    NeoBundle 'xolox/vim-misc'
+    NeoBundle 'xolox/vim-easytags'
   endif "}}}
   if count(s:settings.plugin_groups, 'unite') "{{{
     NeoBundle 'Shougo/unite.vim' "{{{
@@ -634,7 +651,14 @@
     NeoBundleLazy 'guns/xterm-color-table.vim', {'autoload':{'commands':'XtermColorTable'}}
     NeoBundle 'chrisbra/vim_faq'
     NeoBundle 'vimwiki'
+    NeoBundle 'xolox/vim-session' "{{{
+      let g:session_autosave = 'yes'
+      let g:session_autoload = 'yes'
+      let g:session_directory = '~/.vim/.cache/sessions'
+
+    "}}}
     NeoBundle 'bufkill.vim'
+    NeoBundle 'kien/rainbow_parentheses.vim'
     NeoBundle 'mhinz/vim-startify' "{{{
       let g:startify_session_dir = '~/.vim/.cache/sessions'
       let g:startify_change_to_vcs_root = 1
@@ -670,7 +694,7 @@
     "}}}
     NeoBundleLazy 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} "{{{
       let g:goldenview__enable_default_mapping=0
-      nmap <F4> <Plug>ToggleGoldenViewAutoResize
+      nmap <F9> <Plug>ToggleGoldenViewAutoResize
     "}}}
   endif "}}}
   if count(s:settings.plugin_groups, 'windows') "{{{
@@ -679,7 +703,6 @@
     "}}}
     NeoBundleLazy 'nosami/Omnisharp', {'autoload':{'filetypes':['cs']}}
   endif "}}}
-
   nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
 "}}}
 
@@ -691,8 +714,8 @@
 
   nnoremap <leader>w :w<cr>
 
-  " toggle paste
-  map <F6> :set invpaste<CR>:set paste?<CR>
+  " Toggle paste mode
+  nmap <silent> <Leader>p :set invpaste<CR>:set paste?<CR>
 
   " remap arrow keys
   nnoremap <left> :bprev<CR>
@@ -707,7 +730,6 @@
   " change cursor position in insert mode
   inoremap <C-h> <left>
   inoremap <C-l> <right>
-
   inoremap <C-u> <C-g>u<C-u>
 
   if mapcheck('<space>/') == ''
@@ -762,19 +784,33 @@
   " find last search in quickfix
   nnoremap <leader>ff :execute 'vimgrep /'.@/.'/g %'<cr>:copen<cr>
 
+  " CD to the directory containing the file in the buffer {{{
+  nmap <silent> <Leader>cd :lcd %:h<CR>:pwd<CR>
+  nmap <silent> <Leader>md :!mkdir -p %:p:h<CR>
+  " }}}
+
+  " run the command that was just yanked
+  nmap <silent> <Leader>rc :@"<cr>
+
   " shortcuts for windows {{{
-    nnoremap <leader>v <C-w>v<C-w>l
-    nnoremap <leader>s <C-w>s
-    nnoremap <leader>vsa :vert sba<cr>
-    nnoremap <C-h> <C-w>h
-    nnoremap <C-j> <C-w>j
-    nnoremap <C-k> <C-w>k
-    nnoremap <C-l> <C-w>l
+  nnoremap <leader>v <C-w>v<C-w>l
+  nnoremap <leader>s <C-w>s
+  nnoremap <leader>vsa :vert sba<cr>
+  nnoremap <C-h> <C-w>h
+  nnoremap <C-j> <C-w>j
+  nnoremap <C-k> <C-w>k
+  nnoremap <C-l> <C-w>l
+  nnoremap <silent> <Leader>ml <C-W>L
+  nnoremap <silent> <Leader>mk <C-W>K
+  nnoremap <silent> <Leader>mh <C-W>H
+  nnoremap <silent> <Leader>mj <C-W>J
   "}}}
 
   " tab shortcuts
   map <leader>tn :tabnew<CR>
   map <leader>tc :tabclose<CR>
+  map <silent> <Leader>tm :tabm
+  map <silent> <Leader>ts :tab split<CR>
 
   " make Y consistent with C and D. See :help Y.
   nnoremap Y y$
@@ -785,9 +821,27 @@
   " window killer
   nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
 
+  " Delete buffer
+  noremap <silent> <Leader>bd :bd<CR>
+
   " quick buffer open
   nnoremap gb :ls<cr>:e #
 
+  " delete all buffers
+  nmap <silent> <Leader>da :exec "1," . bufnr('$') . "bd"<cr>
+
+  " edit/source vimrc {{{
+  nmap <silent> <Leader>ev :e $MYVIMRC<CR>
+  nmap <silent> <Leader>sv :so $MYVIMRC<CR>
+  " }}}
+
+  " make horizontal scrolling easier {{{
+  nmap <silent> <C-o> 10zl
+  nmap <silent> <C-i> 10zh
+  " }}}
+
+  " underline the current line with '='
+  nmap <silent> <Leader>ul :t.\|s/./=/g\|set nohls<cr>
   if neobundle#is_sourced('vim-dispatch')
     nnoremap <leader>tag :Dispatch ctags -R<cr>
   endif
@@ -821,12 +875,41 @@
     \  exe 'normal! g`"zvzz' |
     \ endif
 
-  autocmd FileType js,scss,css autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+  autocmd FileType js,scss,css,python,coffee autocmd BufWritePre <buffer> call StripTrailingWhitespace()
   autocmd FileType css,scss setlocal foldmethod=marker foldmarker={,}
   autocmd FileType css,scss nnoremap <silent> <leader>S vi{:sort<CR>
   autocmd FileType python setlocal foldmethod=indent
   autocmd FileType markdown setlocal nolist
   autocmd FileType vim setlocal fdm=indent keywordprg=:help
+  
+  " Syntax of these languages is fussy over tabs Vs spaces
+  autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+  
+  " Customisations based on house-style (arbitrary)
+  autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType htmldjango setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType jade setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType stylus setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType javascript,js setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType java,c,cpp,objc setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType vim setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+
+  " Treat .rss files as XML
+  autocmd BufNewFile,BufRead *.rss,*.atom setfiletype xml
+
+  " Binary
+  augroup Binary
+      au!
+      au BufReadPre   *.bin let &bin=1
+      au BufReadPost  *.bin if &bin | %!xxd
+      au BufReadPost  *.bin set filetype=xxd | endif
+      au BufWritePre  *.bin if &bin | %!xxd -r
+      au BufWritePre  *.bin endif
+      au BufWritePost *.bin if &bin | %!xxd
+      au BufWritePost *.bin set nomod | endif
+  augroup END
 "}}}
 
 " color schemes {{{

@@ -1,6 +1,6 @@
-# bling.vim
 
-A highly tuned vim distribution that will blow your socks off!
+# bling.vim
+Vim config based on [bling.vim - "A highly tuned vim distribution that will blow your socks off!"](https://github.com/bling/dotvim)
 
 ## introduction
 

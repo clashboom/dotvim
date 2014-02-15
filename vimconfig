@@ -1,10 +1,9 @@
 let g:dotvim_settings = {}
 let g:dotvim_settings.version = 1
 let g:dotvim_settings.max_column = 80
-" Possible bundles = web, javascript, python, go, scala, ruby
+let g:dotvim_settings.colorscheme = "kolor"
+" web, javascript, python, go, scala, ruby
 let g:dotvim_settings.plugin_groups_exclude  = ['go', 'scala', 'ruby']
 source ~/.vim/vimrc
 
-" set guifont:Terminus\ 12
-set guifont:Source\ Code\ Pro\ 12
-
+set guifont:Anonymous\ Pro\ 12
